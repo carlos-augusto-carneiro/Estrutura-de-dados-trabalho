@@ -4,7 +4,7 @@
 typedef struct Vertice{
    
     int id; //identificador unico de cada vertice
-    
+   
     //mecanismo p/ unir nos!
     struct Vertice * esq;
     struct Vertice * dir;
@@ -14,7 +14,7 @@ VERTICE *raiz = NULL;
 int tam = 0;
 
 VERTICE* buscar(int id, VERTICE *aux){
-    
+   
     if(aux != NULL){
         if(aux->id == id){
             return aux;
@@ -43,18 +43,18 @@ void adicionar(int num){
 
     if (aux != NULL && aux->id == num){
         printf("INSERÇÃO INVALIDA\n");
-        
+       
     }
-    
+   
     else{
-        
+       
         VERTICE *novo = malloc(sizeof(VERTICE));
         novo-> id = num;
         novo-> dir = NULL;
         novo-> esq = NULL;
 
         if (aux == NULL){
-            raiz = novo; 
+            raiz = novo;
         }
         else{    
             if (num < aux->id){
@@ -67,83 +67,91 @@ void adicionar(int num){
     }
 }
 
-VERTICE * remover(VERTICE * raiz, int numero){
-
-    if (raiz == NULL){
-        printf("Valor nao encontrado");
+VERTICE * remover(VERTICE * r, int numero){
+    
+    if (r == NULL){
+        printf("Valor nao encontrado \n");
+        return NULL;
+    }
+    else if (numero < r->id){
+        r->esq == remover(r->esq, numero);
+    }
+    else if(numero > r->id){
+        r->dir == remover(r->dir, numero);
     }
     else{
-        if (raiz->id == numero){
-            if (raiz->dir == NULL && raiz->esq == NULL){
-                free(raiz);
-                return NULL;
-            }
-        
+        if (r->dir == NULL && r->esq == NULL){ //folha
+            free(r); 
+            return NULL;
         }
-        else{
-            if (numero < raiz->id){
-                raiz->esq == remover(raiz->esq, numero);
+        else if (r->dir != NULL && r->esq != NULL){ //2 filho
+            VERTICE *aux = r -> esq;
+            while (aux->dir != NULL){
+                aux = aux -> dir;
             }
-            else{
-                raiz->dir == remover(raiz->dir, numero);
-            }
-            return raiz;
+            r->id = aux ->id;
+            aux->id = numero;
+
+            printf("Elemento foi trocado: %d", numero);
+            r->esq = remover(r->esq, numero);
+            return NULL;
+            
         }
-
-
-    }
-    
-
-
-}
-
-void pre_ordem(VERTICE *aux){
-    printf("%d", aux->id);
-    if(aux->esq != NULL){
-        pre_ordem(aux->esq);
-    }
-    if(aux->dir != NULL){
-        pre_ordem(aux->dir);
-    }
-}
+        else{ // 1 filho
+            VERTICE *aux;
+            if(r->dir == NULL && r->esq != NULL){
+                aux = r->esq;
+            }
+            else if(r-> dir != NULL && r->esq == NULL){
+                aux = r->dir;
+            }
+            return aux;
+        }
+    }  
+}  
 
 void in_ordem(VERTICE *aux){
-    
+   
     if(aux->esq != NULL){
         in_ordem(aux->esq);
     }
-    printf("%d", aux->id);
+    printf("%d\n", aux->id);
     if(aux->dir != NULL){
         in_ordem(aux->dir);
     }
 }
 
-void pos_ordem(VERTICE *aux){
-    
-    if(aux->esq != NULL){
-        pos_ordem(aux->esq);
-    }
-    if(aux->dir != NULL){
-        pos_ordem(aux->dir);
-    }
-    printf("%d", aux->id);
-}
-
-
 
 int main(){
-    adicionar(6);
-    adicionar(2);
-    adicionar(8);
-    adicionar(3);
-    adicionar(5);
-    adicionar(9);
-    adicionar(1);
-    printf("\nIMPRIMINDO\n");
-    in_ordem(raiz);
-    printf("\nREMOVENDO\n");
-    remover(raiz, 9);
-    in_ordem(raiz); 
+    int valor;
+    int remoer;
+    int loop = 1;
+    int escolha;
+
+    do{
+        printf("1 - ADICIONAR\n");
+        printf("2 - REMOVER\n");
+        printf("3 - IMPRIMIR\n");
+        scanf("%d", &escolha);
+
+        switch (escolha){
+        case 1:
+            printf("Valor adicionar:");
+            scanf("%d", &valor);
+            adicionar(valor);
+            break;
+        case 2:
+            printf("Digite o numero a ser removido: ");
+            scanf("%d", &remoer);
+            raiz = remover(raiz, remoer);
+            break;
+        case 3:
+            in_ordem(raiz);
+            break;
+        case 0:
+            break;
+        }
+    }while (loop == 1);
 
 
     return 0;
