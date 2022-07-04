@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int cpf_global;
 
@@ -26,10 +27,10 @@ void addsecretario(int cpf, int senha, int funcao, char* nome_secretario){
     novo->nome_secretario = nome_secretario;
     novo->prox = NULL;
 
-    if(inicio == NULL){ //lista vazia
+    if(inicio == NULL){
         inicio = novo;
         fim = novo;
-    }else{ //fim
+    }else{
         fim->prox = novo;
         fim = novo;
     }  
@@ -89,12 +90,12 @@ void adicionar_arvore(int valor, char * nome, int matricula, char * detalhe){
         novo -> esq = NULL;
         novo -> dir = NULL;
 
-        if (aux == NULL){//vai ser a raiz
+        if (aux == NULL){
             raiz = novo;
         }else{
-            if (aux -> id > valor){//adicionar na esquerda
+            if (aux -> id > valor){
                 aux -> esq = novo;
-            }else{ //direita
+            }else{ 
                 aux -> dir = novo;
             }
         }
@@ -126,7 +127,6 @@ typedef struct livro{
     char* secretario;
     int prioridade;
     
-    //mecanismo p/ unir nos!
     struct livro * prox;
 }LIVRO;
 
@@ -147,13 +147,13 @@ void addfila(int id, char * nome, int matricula, char * detalhe, char* campus_or
     novo->secretario = secretario;
     novo->prioridade = prioridade;
     novo->prox = NULL;
-    if(iniciofila == NULL){ //fila vazia
+    if(iniciofila == NULL){
         iniciofila = novo;
         fimfila = novo;
-    }else if(fimfila -> prioridade > novo ->prioridade){ //adiciona no antigo "fim" da lista
+    }else if(fimfila -> prioridade > novo ->prioridade){
         fimfila->prox = novo;
         fimfila = novo;
-    }else if(iniciofila -> prioridade < novo ->prioridade){ //adiciona no antigo "fim" da lista
+    }else if(iniciofila -> prioridade < novo ->prioridade){
         novo->prox = iniciofila;
         iniciofila = novo;
     }else{
@@ -205,11 +205,11 @@ VERTICE * remover(VERTICE * r, int numero){
             r->dir = remover(r->dir, numero);
         }
         else{
-            if (r->dir == NULL && r->esq == NULL){ //folha
+            if (r->dir == NULL && r->esq == NULL){ 
                 
                 r= NULL;
             }
-            else if (r->dir != NULL && r->esq != NULL){ //2 filho
+            else if (r->dir != NULL && r->esq != NULL){
                 VERTICE *aux = r -> esq;
                 while (aux->dir != NULL){
                     aux = aux -> dir;
@@ -222,14 +222,11 @@ VERTICE * remover(VERTICE * r, int numero){
                 r->esq = remover(r->esq, numero);
             }
             
-            else{ // 1 filho
-
+            else{
                 if(r->dir == NULL && r->esq != NULL){
-                    
                     r = r->esq;
                 }
                 else if(r-> dir != NULL && r->esq == NULL){
-                
                     r = r->dir;
                 }
             }
@@ -239,7 +236,6 @@ VERTICE * remover(VERTICE * r, int numero){
 
 
 void removerfila(){
-    printf("aaaaaaaaaaaaaaa");
     LIVRO * aux = iniciofila;
     printf("\n\nid: %d\n", aux->id);
     printf("nome: %s\n", aux->nome);
@@ -286,21 +282,30 @@ int procurar(int cpf, int senha, int func){
             printf("senha incorreta");
         }
     }else{
-        if ((aux -> cpf == cpf) && (aux -> funcao == func)){
+        if ((aux -> cpf == cpf) && (aux -> funcao == func) && (func == 1)){
             if (aux -> senha == senha){
                 printf("senha correta");
-                removerfila();
-                  
+                removerfila();      
             }else{
                 printf("senha incorreta");
-            }
-
-        }else{
-            printf("nao faz essa fao");
+            } 
         }
     }
 }
 
+int ale1(){
+    srand(time(NULL));
+    int id = rand() % 998;
+    id += 1;
+    return id;
+}
+
+int ale2(){
+    srand(time(NULL));
+    int id = rand() % 999;
+    id += 1001;
+    return id;
+}
 
 int main(){
     addsecretario(1111, 151515, 0, "AAAA");
@@ -330,7 +335,16 @@ int main(){
             printf("Digite os detalhes do livro: ");
             char *detal = malloc(sizeof(char)*1000);
             scanf(" %[^\n]s", detal);
-            adicionar_arvore(matri, nome, matri, detal);
+            int id;
+            int cont = 0;
+            if(raiz == NULL)
+                    id = 1000;
+                else if(cont % 2 == 0)
+                    id = ale1();
+                else
+                    id = ale2();
+            cont++;
+            adicionar_arvore(id, nome, matri, detal);
             break;
         case 2:
             printf("Digite o cpf: ");
