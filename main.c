@@ -318,7 +318,8 @@ int main(){
     addsecretario(8888, 858585, 1, "HHHH");
     int loop = 1;
     int escolha, matri, senha, cpft, senhat;
-
+    int cont = 0;
+    
     do{
         printf("1 - ENCOMENDAR LIVRO\n");
         printf("2 - EFETUAR PEDIDO DE LIVRO (SECRETARIO)\n");
@@ -336,13 +337,13 @@ int main(){
             char *detal = malloc(sizeof(char)*1000);
             scanf(" %[^\n]s", detal);
             int id;
-            int cont = 0;
-            if(raiz == NULL)
+            if(raiz == NULL){
                     id = 1000;
-                else if(cont % 2 == 0)
-                    id = ale1();
-                else
-                    id = ale2();
+            }else if(cont % 2 == 0){
+                id = ale1();
+            }else{
+                id = ale2();
+            }
             cont++;
             adicionar_arvore(id, nome, matri, detal);
             break;
